@@ -1,0 +1,58 @@
+{
+	"name": "SQL_sink_order",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "O_ORDERKEY",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "O_CUSTKEY",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "O_ORDERSTATUS",
+				"type": "varchar"
+			},
+			{
+				"name": "O_TOTALPRICE",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "O_ORDERDATE",
+				"type": "date"
+			},
+			{
+				"name": "O_ORDERPRIORITY",
+				"type": "varchar"
+			},
+			{
+				"name": "O_CLERK",
+				"type": "varchar"
+			},
+			{
+				"name": "O_SHIPPRIORITY",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "O_COMMENT",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "orders"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

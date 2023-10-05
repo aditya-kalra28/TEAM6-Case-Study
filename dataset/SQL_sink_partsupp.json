@@ -1,0 +1,42 @@
+{
+	"name": "SQL_sink_partsupp",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "PS_PARTKEY",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "PS_SUPPKEY",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "PS_AVAILQTY",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "PS_SUPPLYCOST",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "PS_COMMENT",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "partsupp"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

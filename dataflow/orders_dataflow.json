@@ -1,0 +1,56 @@
+{
+	"name": "orders_dataflow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "orders_dataset",
+						"type": "DatasetReference"
+					},
+					"name": "orders"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "orders_parquet",
+						"type": "DatasetReference"
+					},
+					"name": "orderssink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "removerull"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          O_ORDERKEY as integer,",
+				"          O_CUSTKEY as integer,",
+				"          O_ORDERSTATUS as string,",
+				"          O_TOTALPRICE as float,",
+				"          O_ORDERDATE as date,",
+				"          O_ORDERPRIORITY as string,",
+				"          O_CLERK as string,",
+				"          O_SHIPPRIORITY as integer,",
+				"          O_COMMENT as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> orders",
+				"orders alterRow(deleteIf(isNull(O_ORDERKEY)||isNull(O_CUSTKEY)||isNull(O_ORDERSTATUS))) ~> removerull",
+				"removerull sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> orderssink"
+			]
+		}
+	}
+}

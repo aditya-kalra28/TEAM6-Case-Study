@@ -1,0 +1,54 @@
+{
+	"name": "supplier_dataflow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "supplier_dataset",
+						"type": "DatasetReference"
+					},
+					"name": "supplier"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "supplier_parquet",
+						"type": "DatasetReference"
+					},
+					"name": "suppliersink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "removerull"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          S_SUPPKEY as integer,",
+				"          S_NAME as string,",
+				"          S_ADDRESS as string,",
+				"          S_NATIONKEY as integer,",
+				"          S_PHONE as string,",
+				"          S_ACCTBAL as float,",
+				"          S_COMMENT as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> supplier",
+				"supplier alterRow(deleteIf(isNull(S_SUPPKEY)||isNull(S_NATIONKEY))) ~> removerull",
+				"removerull sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> suppliersink"
+			]
+		}
+	}
+}

@@ -1,0 +1,49 @@
+{
+	"name": "SQL_sink_supplier",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "S_SUPPKEY",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "S_NAME",
+				"type": "varchar"
+			},
+			{
+				"name": "S_ADDRESS",
+				"type": "varchar"
+			},
+			{
+				"name": "S_NATIONKEY",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "S_PHONE",
+				"type": "varchar"
+			},
+			{
+				"name": "S_ACCTBAL",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "S_COMMENT",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "supplier"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

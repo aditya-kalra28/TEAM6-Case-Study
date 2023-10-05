@@ -1,0 +1,63 @@
+{
+	"name": "lineitem_dataflow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "lineitem_dataset",
+						"type": "DatasetReference"
+					},
+					"name": "lineitem"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "lineitem_parquet",
+						"type": "DatasetReference"
+					},
+					"name": "lineitemsink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "removerull"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          L_ORDERKEY as integer,",
+				"          L_PARTKEY as integer,",
+				"          L_SUPPKEY as integer,",
+				"          L_LINENUMBER as integer,",
+				"          L_QUANTITY as integer,",
+				"          L_EXTENDEDPRICE as float,",
+				"          L_DISCOUNT as float,",
+				"          L_TAX as float,",
+				"          L_RETURNFLAG as string,",
+				"          L_LINESTATUS as string,",
+				"          L_SHIPDATE as date,",
+				"          L_COMMITDATE as date,",
+				"          L_RECEIPTDATE as date,",
+				"          L_SHIPINSTRUCT as string,",
+				"          L_SHIPMODE as string,",
+				"          L_COMMENT as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> lineitem",
+				"lineitem alterRow(deleteIf(isNull(L_ORDERKEY)||isNull(L_PARTKEY)||isNull(L_SUPPKEY))) ~> removerull",
+				"removerull sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> lineitemsink"
+			]
+		}
+	}
+}

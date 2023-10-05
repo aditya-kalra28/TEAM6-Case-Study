@@ -1,0 +1,46 @@
+{
+	"name": "partsupp_dataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "partsupp.csv",
+				"folderPath": "sales_data",
+				"container": "sales-raw-data"
+			},
+			"columnDelimiter": "\t",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "PS_PARTKEY",
+				"type": "String"
+			},
+			{
+				"name": "PS_SUPPKEY",
+				"type": "String"
+			},
+			{
+				"name": "PS_AVAILQTY",
+				"type": "String"
+			},
+			{
+				"name": "PS_SUPPLYCOST",
+				"type": "String"
+			},
+			{
+				"name": "PS_COMMENT",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

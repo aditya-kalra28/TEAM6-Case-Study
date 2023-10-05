@@ -1,0 +1,51 @@
+{
+	"name": "nation_dataflow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "nation_dataset",
+						"type": "DatasetReference"
+					},
+					"name": "nation"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "nation_parquet",
+						"type": "DatasetReference"
+					},
+					"name": "nationsink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "removerull"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          N_NATIONKEY as integer,",
+				"          N_NAME as string,",
+				"          N_REGIONKEY as integer,",
+				"          N_COMMENT as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> nation",
+				"nation alterRow(deleteIf(isNull(N_NATIONKEY)||isNull(N_REGIONKEY)||isNull(N_NAME))) ~> removerull",
+				"removerull sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> nationsink"
+			]
+		}
+	}
+}

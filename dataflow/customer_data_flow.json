@@ -1,0 +1,55 @@
+{
+	"name": "customer_data_flow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "customer_dataset",
+						"type": "DatasetReference"
+					},
+					"name": "customer"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "customer_parquet",
+						"type": "DatasetReference"
+					},
+					"name": "customersink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "filternull"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          C_CUSTKEY as integer,",
+				"          C_NAME as string,",
+				"          C_ADDRESS as string,",
+				"          C_NATIONKEY as integer,",
+				"          C_PHONE as string,",
+				"          C_ACCTBAL as float,",
+				"          C_MKTSEGMENT as string,",
+				"          C_COMMENT as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> customer",
+				"customer filter(!isNull(C_CUSTKEY) && !isNull(C_NAME) && !isNull(C_ADDRESS) && !isNull(C_NATIONKEY) && !isNull(C_PHONE) && !isNull(C_ACCTBAL)) ~> filternull",
+				"filternull sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> customersink"
+			]
+		}
+	}
+}

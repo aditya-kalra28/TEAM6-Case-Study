@@ -1,0 +1,42 @@
+{
+	"name": "nation_dataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "nation.csv",
+				"folderPath": "sales_data",
+				"container": "sales-raw-data"
+			},
+			"columnDelimiter": "\t",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "N_NATIONKEY",
+				"type": "String"
+			},
+			{
+				"name": "N_NAME",
+				"type": "String"
+			},
+			{
+				"name": "N_REGIONKEY",
+				"type": "String"
+			},
+			{
+				"name": "N_COMMENT",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

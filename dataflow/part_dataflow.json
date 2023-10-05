@@ -1,0 +1,56 @@
+{
+	"name": "part_dataflow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "part_dataset",
+						"type": "DatasetReference"
+					},
+					"name": "part"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "part_parquet",
+						"type": "DatasetReference"
+					},
+					"name": "partsink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "removerull"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          P_PARTKEY as integer,",
+				"          P_NAME as string,",
+				"          P_MFGR as string,",
+				"          P_BRAND as string,",
+				"          P_TYPE as string,",
+				"          P_SIZE as integer,",
+				"          P_CONTAINER as string,",
+				"          P_RETAILPRICE as float,",
+				"          P_COMMENT as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> part",
+				"part alterRow(deleteIf(isNull(P_PARTKEY))) ~> removerull",
+				"removerull sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> partsink"
+			]
+		}
+	}
+}

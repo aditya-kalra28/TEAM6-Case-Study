@@ -1,0 +1,9 @@
+{
+	"name": "teamhackcs6adf",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "80cd1a26-3f30-4cca-a000-e49f521ad307",
+		"tenantId": "dce87315-8ffa-4a01-ab40-0de5a7214b2f"
+	}
+}

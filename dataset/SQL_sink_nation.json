@@ -1,0 +1,36 @@
+{
+	"name": "SQL_sink_nation",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "N_NATIONKEY",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "N_NAME",
+				"type": "varchar"
+			},
+			{
+				"name": "N_REGIONKEY",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "N_COMMENT",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "nation"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

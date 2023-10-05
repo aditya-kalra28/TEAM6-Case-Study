@@ -1,0 +1,57 @@
+{
+	"name": "SQL_sink_part",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "P_PARTKEY",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "P_NAME",
+				"type": "varchar"
+			},
+			{
+				"name": "P_MFGR",
+				"type": "varchar"
+			},
+			{
+				"name": "P_BRAND",
+				"type": "varchar"
+			},
+			{
+				"name": "P_TYPE",
+				"type": "varchar"
+			},
+			{
+				"name": "P_SIZE",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "P_CONTAINER",
+				"type": "varchar"
+			},
+			{
+				"name": "P_RETAILPRICE",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "P_COMMENT",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "part"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

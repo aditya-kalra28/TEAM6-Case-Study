@@ -1,0 +1,52 @@
+{
+	"name": "partsupp_dataflow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "partsupp_dataset",
+						"type": "DatasetReference"
+					},
+					"name": "partsupp"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "partsupp_parquet",
+						"type": "DatasetReference"
+					},
+					"name": "partsuppsink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "removerull"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          PS_PARTKEY as integer,",
+				"          PS_SUPPKEY as integer,",
+				"          PS_AVAILQTY as integer,",
+				"          PS_SUPPLYCOST as float,",
+				"          PS_COMMENT as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> partsupp",
+				"partsupp alterRow(deleteIf(isNull(PS_PARTKEY)||isNull(PS_SUPPKEY)||isNull(PS_AVAILQTY)||isNull(PS_SUPPLYCOST))) ~> removerull",
+				"removerull sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> partsuppsink"
+			]
+		}
+	}
+}
