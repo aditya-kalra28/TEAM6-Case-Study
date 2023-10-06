@@ -1,0 +1,78 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "customer_dataset",
+						"type": "DatasetReference"
+					},
+					"name": "Customer"
+				},
+				{
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "customer_parquet",
+						"type": "DatasetReference"
+					},
+					"name": "sinkinsql"
+				}
+			],
+			"transformations": [
+				{
+					"name": "removrenullwithunknown"
+				},
+				{
+					"name": "DeleteNullrecord"
+				},
+				{
+					"name": "sortaccbal"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          C_CUSTKEY as string,",
+				"          C_NAME as string,",
+				"          C_ADDRESS as string,",
+				"          C_NATIONKEY as string,",
+				"          C_PHONE as string,",
+				"          C_ACCTBAL as string,",
+				"          C_MKTSEGMENT as string,",
+				"          C_COMMENT as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Customer",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false) ~> source1",
+				"DeleteNullrecord derive(C_NAME = iifNull(C_NAME, 'unknown', C_NAME)) ~> removrenullwithunknown",
+				"Customer alterRow(deleteIf(isNull(C_CUSTKEY))) ~> DeleteNullrecord",
+				"removrenullwithunknown sort(desc(C_ACCTBAL, true)) ~> sortaccbal",
+				"sortaccbal sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          custkey = C_CUSTKEY,",
+				"          cname = C_NAME,",
+				"          caddress = C_ADDRESS,",
+				"          cnation = C_NATIONKEY,",
+				"          cphone = C_PHONE,",
+				"          caccbal = C_ACCTBAL,",
+				"          cmanagement = C_MKTSEGMENT,",
+				"          ccomminsion = C_COMMENT",
+				"     )) ~> sinkinsql"
+			]
+		}
+	}
+}

@@ -1,0 +1,80 @@
+{
+	"name": "dataflow2",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "nation_dataset",
+						"type": "DatasetReference"
+					},
+					"name": "nation"
+				},
+				{
+					"dataset": {
+						"referenceName": "region_dataset",
+						"type": "DatasetReference"
+					},
+					"name": "region"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "nation_parquet",
+						"type": "DatasetReference"
+					},
+					"name": "natreg"
+				}
+			],
+			"transformations": [
+				{
+					"name": "nationjoinregion"
+				},
+				{
+					"name": "sort1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          N_NATIONKEY as integer,",
+				"          N_NAME as string,",
+				"          N_REGIONKEY as integer,",
+				"          N_COMMENT as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> nation",
+				"source(output(",
+				"          R_REGIONKEY as integer,",
+				"          R_NAME as string,",
+				"          R_COMMENT as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> region",
+				"nation, region join(N_REGIONKEY == R_REGIONKEY,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> nationjoinregion",
+				"nationjoinregion sort(asc(R_REGIONKEY, true)) ~> sort1",
+				"sort1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          regionkey = R_REGIONKEY,",
+				"          rname = R_NAME,",
+				"          nationkey = N_NATIONKEY,",
+				"          nname = N_NAME",
+				"     )) ~> natreg"
+			]
+		}
+	}
+}
